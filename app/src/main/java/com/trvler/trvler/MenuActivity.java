@@ -81,7 +81,7 @@ public class MenuActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_maps) {
             Intent newxtScreen = new Intent(getApplicationContext(), MapsActivity.class);
             startActivity(newxtScreen);
         } else if (id == R.id.nav_gallery) {
