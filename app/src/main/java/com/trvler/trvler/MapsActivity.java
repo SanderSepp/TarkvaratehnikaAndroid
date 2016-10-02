@@ -1,17 +1,8 @@
 package com.trvler.trvler;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -21,10 +12,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+
+import org.json.JSONException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private MyLocationListerner locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +33,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
-
 
 
     /**
@@ -51,16 +48,48 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng coordinates = new LatLng(59.3971713, 24.66111509999996);
-        mMap.addMarker(new MarkerOptions()
-            .position(coordinates)
-            .title("IT maja")
-            .snippet("Oled siin")
-        );
+        createMarkers(mMap);
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(coordinates)
-                .zoom(15.0f)
-                .tilt(30)
-                .build();
+            .target(coordinates)
+            .zoom(15.0f)
+            .tilt(30)
+            .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+    public String loadJSONFromAsset() {
+        String json;
+        try {
+            InputStream is = getAssets().open("markers.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+    public void createMarkers(GoogleMap mMap) {
+        try {
+            JSONObject obj = new JSONObject(loadJSONFromAsset());
+            JSONArray markersArray = obj.getJSONArray("markers");
+
+            for (int i = 0; i < markersArray.length(); i++) {
+                JSONObject jo_inside = markersArray.getJSONObject(i);
+                //Log.d("Latitude: -->", jo_inside.getString("lat"));
+                Double lat = jo_inside.getDouble("lat");
+                Double lng = jo_inside.getDouble("lng");
+                String title = jo_inside.getString("title");
+                String description = jo_inside.getString("description");
+                mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(lat, lng))
+                    .title(title)
+                    .snippet(description));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

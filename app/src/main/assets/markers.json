@@ -1,0 +1,27 @@
+{"markers": [
+  {
+    "lat": "59.3977111",
+    "lng": "24.660198",
+    "title":"TUT Something",
+    "description": "Good place for good knowledge."
+  },
+  {
+    "lat": "59.471209",
+    "lng": "24.8852613",
+    "title": "Tallinn TV Tower",
+    "description": "Good tower to get on top on."
+  },
+  {
+    "lat": "59.4508487",
+    "lng": "24.7384057",
+    "title": "Patarei Sea Fortress/Prison",
+    "description": "Soon to be demolished fortress."
+  },
+  {
+    "lat": "59.4461093",
+    "lng": "24.7510121",
+    "title": "Tallinna Linnahall",
+    "description": "Good roof to get on top on."
+  }
+]
+}
