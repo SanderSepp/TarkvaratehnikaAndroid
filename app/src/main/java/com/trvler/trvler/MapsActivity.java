@@ -77,12 +77,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             JSONArray markersArray = obj.getJSONArray("markers");
 
             for (int i = 0; i < markersArray.length(); i++) {
-                JSONObject jo_inside = markersArray.getJSONObject(i);
+                JSONObject marker = markersArray.getJSONObject(i);
                 //Log.d("Latitude: -->", jo_inside.getString("lat"));
-                Double lat = jo_inside.getDouble("lat");
-                Double lng = jo_inside.getDouble("lng");
-                String title = jo_inside.getString("title");
-                String description = jo_inside.getString("description");
+                Double lat = marker.getDouble("lat");
+                Double lng = marker.getDouble("lng");
+                String title = marker.getString("title");
+                String description = marker.getString("description");
                 mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(lat, lng))
                     .title(title)
